@@ -75,8 +75,8 @@ $(function () {
     if (posts.posts.length === 0) {
       addPostElement += `<p>User has no posts</p>`;
     } else {
-      posts.posts.forEach((post) => {
-        addPostElement += `<li><div><p>${post.title}</p><p>${post.body}</p></div></li>`;
+      posts.posts.forEach((post, index) => {
+        addPostElement += `<li data-index=${index}><div><p>${post.title}</p><p>${post.body}</p></div></li>`;
       });
     }
 
@@ -91,14 +91,14 @@ $(function () {
     $(".todos ul").empty();
   }
 
-  function createModal(postsAll) {
+  function createModal(postsAll, index) {
     let modalContent = "";
     modalContent = `
     <div class=overlay>
     <div class=modal>
-      <p>${postsAll.posts[0].title}</p>
-      <p>${postsAll.posts[0].body}</p>
-      <p>Views: ${postsAll.posts[0].views}</p>
+      <p>${postsAll.posts[index].title}</p>
+      <p>${postsAll.posts[index].body}</p>
+      <p>Views: ${postsAll.posts[index].views}</p>
       <button>Close Modal</button>
     </div>
     </div>`;
@@ -144,20 +144,12 @@ $(function () {
   });
 
   $(".posts ul").on("click", "li div p", function () {
-    createModal(postsAll);
-    // $(".modal").css({
-    //   position: "absolute",
-    //   top: "50%",
-    //   left: "50%",
-    //   transform: "translate(-50%, -50%)",
-    //   backgroundColor: "black",
-    //   opacity: 0.5,
-    // });
+    const index = $(this).closest("li").data("index");
+    createModal(postsAll, index);
   });
 
-  $(".modal button").on("click", function () {
-    $(this).css({
-      display: "none",
-    });
+  $("body").on("click", ".modal button", function () {
+    // if the thing that was clicked matched ".modal button", run the funtion.
+    $(".overlay").remove();
   });
 });
